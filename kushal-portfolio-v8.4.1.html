@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kushal Jain — Precision Measurement, Photonics &amp; Control Systems</title>
+<meta name="description" content="Engineering-focused experimental physicist in laser frequency stabilisation, optical interferometry, control systems, calibration, and precision instrumentation."/>
+<meta name="keywords" content="laser frequency stabilisation, PDH locking, optical interferometry, cavity locking, transfer-function measurement, control systems, precision metrology, calibration, instrumentation, hardware debugging, UHV systems, Python, Linux, Git, experimental commissioning"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet"/>
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:18px}
+body{
+  background:#050810;color:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  font-size:1rem;
+  font-family:var(--body);
+}
+::selection{background:rgba(0,200,255,.18)}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:#050810}
+::-webkit-scrollbar-thumb{background:rgba(0,200,255,.25)}
+
+:root{
+  --cyan:#00c8ff;
+  --cyan-faint:rgba(0,200,255,.08);
+  --cyan-border:rgba(0,200,255,.2);
+  --white:rgba(255,255,255,.86);
+  --mid:rgba(255,255,255,.72);
+  --dim:rgba(255,255,255,.5);
+  --border:rgba(255,255,255,.07);
+  --card:rgba(255,255,255,.02);
+  --mono:"Space Mono",monospace;
+  --display:"Bebas Neue",sans-serif;
+  --body:"DM Sans",sans-serif;
+}
+
+/* Utility Colors for Badges */
+.color-cyan { color: #00c8ff; }
+.color-green { color: #00e5aa; }
+.color-purple { color: #a78bfa; }
+.color-orange { color: #fb923c; }
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scrollPulse{0%,100%{opacity:.3;transform:scaleY(.8)}50%{opacity:1;transform:scaleY(1.1)}}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease;will-change:opacity,transform}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:66px;padding:0 2.2rem;display:flex;align-items:center;justify-content:space-between;transition:background .35s,border-color .35s,backdrop-filter .35s}
+nav.scrolled{background:rgba(5,8,16,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--cyan-faint)}
+.nav-logo{font-family:var(--display);font-size:1.35rem;letter-spacing:.18em;color:var(--cyan);text-decoration:none;flex-shrink:0}
+.nav-links{display:flex;gap:1rem;align-items:center}
+.nav-links a{
+  font-family:var(--body);
+  font-size:.86rem;
+  font-weight:500;
+  letter-spacing:.01em;
+  color:var(--mid);
+  text-decoration:none;
+  transition:color .2s;
+  white-space:nowrap
+}
+.nav-links a:hover{color:var(--cyan)}
+.nav-cv-btn{
+  font-family:var(--body);
+  font-size:.84rem;
+  font-weight:600;
+  letter-spacing:.01em;
+  color:#041018;
+  background:#39c6ff;
+  text-decoration:none;
+  padding:.46rem .95rem;
+  transition:background .2s;
+  white-space:nowrap;
+  flex-shrink:0
+}
+.nav-cv-btn:hover{background:#33d4ff;color:#041018}
+.burger{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:4px}
+.burger span{display:block;width:22px;height:1.5px;background:var(--cyan)}
+.mobile-menu{display:none;position:fixed;top:66px;left:0;right:0;background:rgba(5,8,16,.97);border-bottom:1px solid var(--cyan-faint);padding:1.3rem;flex-direction:column;gap:1rem;z-index:99}
+.mobile-menu.open{display:flex}
+.mobile-menu a{
+  font-family:var(--body);
+  font-size:.95rem;
+  font-weight:500;
+  color:var(--white);
+  text-decoration:none
+}
+.mobile-menu .mob-cv{
+  font-family:var(--body);
+  font-size:.95rem;
+  font-weight:600;
+  color:#041018;
+  background:#39c6ff;
+  padding:.52rem 1rem;
+  text-align:center;
+  margin-top:.2rem
+}
+
+.section{padding:5.7rem 2rem;max-width:1140px;margin:0 auto}
+.section-alt{padding:5.7rem 2rem;background:linear-gradient(180deg,#050810,#060b15,#050810)}
+.section-alt-inner{max-width:1140px;margin:0 auto}
+.sec-label{font-family:var(--mono);font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:.6rem}
+.sec-title{font-family:var(--display);font-size:clamp(2rem,4vw,3rem);color:#fff;letter-spacing:.06em;margin:0 0 1.6rem;line-height:1.2}
+
+.btn-primary,.btn-ghost,.btn-cv{
+  padding:.68rem 1.5rem;text-decoration:none;font-family:var(--body);font-size:.9rem;font-weight:600;letter-spacing:.01em;display:inline-block;white-space:nowrap
+}
+.btn-primary{background:var(--cyan);color:#041018;transition:background .2s}
+.btn-primary:hover{background:#33d4ff}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,.24);color:var(--white);transition:all .2s}
+.btn-ghost:hover{border-color:rgba(0,200,255,.45);color:var(--cyan)}
+.btn-cv{background:transparent;border:1px solid rgba(0,200,255,.4);color:var(--cyan);transition:all .2s}
+.btn-cv:hover{background:rgba(0,200,255,.1)}
+
+#hero{position:relative;height:100vh;min-height:640px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#hero canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-content{position:relative;z-index:2;max-width:1060px;width:100%;padding:0 1.4rem;display:grid;grid-template-columns:1fr 155px;gap:1.6rem;align-items:center}
+.hero-left{text-align:left}
+.hero-eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;color:var(--cyan);text-transform:uppercase;margin-bottom:.9rem;animation:fadeUp .75s ease both}
+.hero-name{font-family:var(--display);font-size:clamp(3rem,8vw,6rem);letter-spacing:.06em;color:#fff;line-height:.95;margin:0 0 .85rem;animation:fadeUp .8s .07s ease both}
+.hero-headline{font-family:var(--body);font-size:1.02rem;color:rgba(255,255,255,.95);line-height:1.62;max-width:780px;margin:0 0 .75rem;animation:fadeUp .85s .14s ease both}
+.hero-sub-tagline{font-family:var(--mono);font-size:.78rem;color:rgba(0,200,255,.8);letter-spacing:.04em;max-width:840px;margin:0 0 1.6rem;animation:fadeUp .9s .22s ease both;line-height:1.5}
+.hero-ctas{display:flex;gap:.7rem;flex-wrap:wrap;animation:fadeUp 1s .3s ease both}
+.hero-stats{display:flex;gap:1.3rem;margin-top:1.7rem;flex-wrap:wrap;animation:fadeUp 1s .42s ease both}
+.hero-stat-val{font-family:var(--display);font-size:1.24rem;color:var(--cyan);letter-spacing:.04em}
+.hero-stat-label{font-family:var(--mono);font-size:.72rem;color:var(--dim);letter-spacing:.07em;text-transform:uppercase;line-height:1.35}
+.hero-stat-sub{font-family:var(--mono);font-size:.62rem;color:rgba(255,255,255,.35);letter-spacing:.04em;margin-top:.1rem}
+.hero-photo-wrap{justify-self:end;animation:fadeUp 1s .3s ease both}
+.hero-photo{width:150px;height:150px;border-radius:50%;border:1px solid rgba(0,200,255,.3);object-fit:cover;display:block;background:rgba(255,255,255,.03);box-shadow:0 0 0 7px rgba(0,200,255,.04)}
+.scroll-hint{position:absolute;bottom:1.7rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.35rem;animation:fadeIn 1s 1.1s ease both}
+.scroll-hint span{font-family:var(--mono);font-size:.58rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+.scroll-line{width:1px;height:29px;background:linear-gradient(to bottom,rgba(0,200,255,.55),transparent);animation:scrollPulse 2s infinite}
+
+.identity-box{border:1px solid var(--cyan-border);background:rgba(0,200,255,.03);padding:1.75rem 2rem;position:relative;overflow:hidden}
+.identity-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--cyan),transparent)}
+.identity-text{font-family:var(--body);font-size:.96rem;color:rgba(255,255,255,.9);line-height:1.72;max-width:900px}
+.identity-text strong{color:#fff;font-weight:600}
+.identity-text a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(0,200,255,.35)}
+.identity-text a:hover{border-bottom-color:rgba(0,200,255,.8)}
+.cite-source{font-family:var(--mono);font-size:.8em;color:var(--dim)}
+
+.edu-card,.exp-card,.skills-block,.impact-card,.recognition-row,.presentation-row,.opp-item,.contact-card{border:1px solid var(--border);background:var(--card)}
+.edu-card,.exp-card,.skills-block,.impact-card,.recognition-row,.presentation-row{transition:border-color .2s,background .2s}
+.edu-card:hover,.exp-card:hover,.skills-block:hover,.impact-card:hover,.recognition-row:hover,.presentation-row:hover{border-color:rgba(0,200,255,.18);background:rgba(0,200,255,.025)}
+
+.edu-card{padding:1.4rem 1.55rem;margin-bottom:.8rem;position:relative}
+.edu-card.featured{border-color:var(--cyan-border);background:rgba(0,200,255,.04)}
+.edu-card.featured::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cyan)}
+.edu-row{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.45rem;margin-bottom:.65rem}
+.edu-degree{font-family:var(--body);font-size:.98rem;font-weight:600;color:#fff;line-height:1.35}
+.edu-inst{font-family:var(--mono);font-size:.78rem;color:var(--cyan)}
+.edu-detail{font-family:var(--mono);font-size:.78rem;color:var(--dim);margin-top:.15rem}
+.edu-period{font-family:var(--mono);font-size:.76rem;color:var(--dim);white-space:nowrap}
+.edu-focus{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem;padding-top:.6rem;border-top:1px solid rgba(255,255,255,.05)}
+.edu-tag{font-family:var(--mono);font-size:.78rem;color:rgba(0,200,255,.82);border:1px solid rgba(0,200,255,.18);padding:.16rem .5rem}
+.edu-supervisors{font-family:var(--mono);font-size:.74rem;color:var(--dim);margin-top:.45rem}
+
+.exp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(390px,1fr));gap:1rem}
+.exp-card{padding:1.55rem;position:relative}
+.exp-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:2px;background:rgba(0,200,255,.28)}
+.exp-tag{font-family:var(--mono);font-size:.74rem;color:var(--cyan);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.45rem}
+.exp-title{font-family:var(--body);font-size:1rem;font-weight:600;color:#fff;margin-bottom:.7rem;line-height:1.35}
+.exp-field-label{font-family:var(--mono);font-size:.74rem;color:var(--cyan);letter-spacing:.12em;text-transform:uppercase;margin:.62rem 0 .2rem}
+.exp-body{font-family:var(--body);font-size:.95rem;color:var(--mid);line-height:1.6;max-width:62ch}
+.exp-bullets{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.3rem}
+.exp-bullets li{font-family:var(--body);font-size:.95rem;color:rgba(255,255,255,.82);padding-left:.82rem;position:relative;line-height:1.48;max-width:64ch}
+.exp-bullets li::before{content:'›';position:absolute;left:0;color:var(--cyan)}
+.exp-outcome-row{border-top:1px solid rgba(255,255,255,.05);margin-top:.7rem;padding-top:.6rem}
+.exp-outcome-val{font-family:var(--mono);font-size:.76rem;color:rgba(255,255,255,.8);line-height:1.55;max-width:66ch}
+.exp-outcome-val strong{color:var(--cyan)}
+
+.impact-title{font-family:var(--display);font-size:clamp(1.5rem,3vw,2.1rem);color:#fff;letter-spacing:.06em;margin-bottom:.6rem}
+.impact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.82rem;margin-top:1rem}
+.impact-card{padding:1.12rem}
+.impact-icon{font-size:.84rem;color:var(--cyan);margin-bottom:.5rem;opacity:.72}
+.impact-metric{font-family:var(--display);font-size:1.42rem;color:var(--cyan);line-height:1;margin-bottom:.24rem}
+.impact-label{font-family:var(--body);font-size:.9rem;color:#fff;margin-bottom:.16rem;font-weight:600}
+.impact-sub{font-family:var(--body);font-size:.92rem;color:var(--mid);line-height:1.45}
+
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:.9rem}
+.skills-block{padding:1.25rem 1.32rem}
+.skills-block-title{font-family:var(--mono);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:.75rem;padding-bottom:.48rem;border-bottom:1px solid rgba(0,200,255,.12)}
+.skills-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.42rem}
+.skills-list li{font-family:var(--body);font-size:.95rem;color:var(--mid);padding-left:.8rem;position:relative;line-height:1.45}
+.skills-list li::before{content:'—';position:absolute;left:0;color:rgba(0,200,255,.38);font-size:.62rem;top:.1rem}
+
+.row-list{display:flex;flex-direction:column;gap:1rem}
+.recognition-row,.presentation-row{padding:1rem 1.1rem;position:relative}
+.recognition-row::before,.presentation-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:rgba(0,200,255,.28)}
+.row-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.8rem;flex-wrap:wrap}
+.row-title{font-family:var(--body);font-size:.95rem;color:#fff;font-weight:600;line-height:1.34;max-width:70ch}
+.row-date{font-family:var(--mono);font-size:.72rem;color:var(--dim);white-space:nowrap}
+.row-badge{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid currentColor;padding:.12rem .36rem;display:inline-block;margin-bottom:.35rem}
+.row-meta{font-family:var(--mono);font-size:.74rem;color:var(--dim);line-height:1.42;margin-top:.22rem;max-width:72ch}
+
+.opp-box{border:1px solid var(--cyan-border);background:rgba(0,200,255,.03);padding:1.75rem;position:relative;overflow:hidden}
+.opp-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--cyan),transparent)}
+.opp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:.75rem;margin-top:1.3rem}
+.opp-item{padding:.95rem 1rem;transition:all .2s}
+.opp-item:hover{border-color:rgba(0,200,255,.26);background:rgba(0,200,255,.035)}
+.opp-icon{font-size:.78rem;color:var(--cyan);margin-bottom:.34rem;opacity:.72}
+.opp-item-title{font-family:var(--body);font-size:.88rem;font-weight:600;color:#fff;margin-bottom:.14rem}
+.opp-item-sub{font-family:var(--body);font-size:.92rem;color:var(--mid);line-height:1.43}
+.opp-status{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.7rem;color:var(--cyan);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem}
+.opp-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);flex-shrink:0}
+
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:.75rem;margin-bottom:1.95rem}
+.contact-card{display:block;text-decoration:none;padding:1rem;transition:all .2s}
+.contact-card:hover{border-color:rgba(0,200,255,.28);background:rgba(0,200,255,.045)}
+.contact-icon{font-size:.82rem;color:var(--cyan);margin-bottom:.35rem;opacity:.72}
+.contact-label{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(0,200,255,.56);margin-bottom:.2rem}
+.contact-val{font-family:var(--body);font-size:.92rem;color:rgba(255,255,255,.8);word-break:break-all;line-height:1.35}
+.contact-sub{font-family:var(--mono);font-size:.68rem;color:rgba(255,255,255,.35);margin-top:.25rem;line-height:1.4}
+.contact-cv-row{margin-bottom:1.95rem;padding:1.1rem 1.3rem;border:1px solid var(--cyan-border);background:rgba(0,200,255,.03);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.7rem}
+.contact-cv-text{font-family:var(--body);font-size:.95rem;color:var(--mid)}
+
+footer{border-top:1px solid var(--border);padding:1.8rem 1.9rem;max-width:1120px;margin:0 auto}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1.4rem;margin-bottom:1.3rem}
+.footer-name{font-family:var(--display);font-size:1.06rem;letter-spacing:.15em;color:var(--cyan)}
+.footer-location{font-family:var(--mono);font-size:.7rem;color:var(--dim)}
+.footer-links{display:flex;gap:.85rem;flex-wrap:wrap}
+.footer-link{font-family:var(--body);font-size:.82rem;color:var(--mid);text-decoration:none;letter-spacing:.01em}
+.footer-link:hover{color:var(--cyan)}
+.footer-link.institution-link{white-space:nowrap}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.7rem;padding-top:.95rem;border-top:1px solid rgba(255,255,255,.04)}
+.footer-copy{font-family:var(--mono);font-size:.64rem;color:var(--dim)}
+
+@media(max-width:980px){
+  .hero-content{grid-template-columns:1fr}
+  .hero-left{text-align:center}
+  .hero-headline,.hero-sub-tagline{margin-left:auto;margin-right:auto}
+  .hero-photo-wrap{justify-self:center}
+  .hero-stats{justify-content:center}
+}
+@media(max-width:760px){
+  .nav-links{display:none!important}
+  .burger{display:flex!important}
+  nav{padding:0 1.2rem}
+}
+@media(max-width:640px){
+  html{font-size:16px}
+  .section,.section-alt{padding:4.4rem 1.2rem}
+  .exp-grid,.skills-grid,.opp-grid{grid-template-columns:1fr}
+  .hero-ctas a{width:100%;text-align:center}
+  .hero-photo{width:126px;height:126px}
+}
+</style>
+</head>
+<body>
+
+<nav id="main-nav" role="navigation" aria-label="Primary navigation">
+  <a class="nav-logo" href="#top" aria-label="Kushal Jain">KJ</a>
+  <div class="nav-links">
+    <a href="#experience">Experience</a>
+    <a href="#skills">Skills</a>
+    <a href="#education">Education</a>
+    <a href="#recognition">Awards</a>
+    <a href="#contact">Contact</a>
+    <a class="nav-cv-btn" href="Kushal_Jain_CV.pdf" target="_blank" rel="noopener" download>Download CV</a>
+  </div>
+  <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <a href="#experience" onclick="closeMobile()">Experience</a>
+  <a href="#skills" onclick="closeMobile()">Skills</a>
+  <a href="#education" onclick="closeMobile()">Education</a>
+  <a href="#recognition" onclick="closeMobile()">Awards</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+  <a class="mob-cv" href="Kushal_Jain_CV.pdf" target="_blank" rel="noopener" download onclick="closeMobile()">Download CV</a>
+</div>
+
+<section id="top" aria-label="Hero">
+  <div id="hero">
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="hero-eyebrow">Precision Instrumentation · Photonics · Control Systems</div>
+        <h1 class="hero-name">Kushal Jain</h1>
+        <p class="hero-headline">
+          Laser frequency stabilisation, optical interferometry, transfer-function measurement, and control-loop commissioning for high-performance sensing systems.
+        </p>
+        <p class="hero-sub-tagline">
+          Industry focus: quantum technologies, photonics, advanced instrumentation, precision metrology, and defence/aerospace R&amp;D.
+        </p>
+        <div class="hero-ctas">
+          <a class="btn-primary" href="#experience">View Experience</a>
+          <a class="btn-cv" href="Kushal_Jain_CV.pdf" target="_blank" rel="noopener" download>Download CV</a>
+          <a class="btn-ghost" href="#contact">Contact</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-val">~370×</div>
+            <div class="hero-stat-label">System Power-recycling Gain</div>
+          </div>
+          <div><div class="hero-stat-val">10⁻⁷ mbar</div><div class="hero-stat-label">Ultra-High Vacuum (UHV)</div></div>
+          <div>
+            <div class="hero-stat-val">10⁻²¹ m/√Hz</div>
+            <div class="hero-stat-label">1–200 MHz Band Sensitivity</div>
+            <div class="hero-stat-sub">QUEST experiment</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-photo-wrap">
+        <img class="hero-photo" src="kushal-profile.jpg" alt="Kushal Jain portrait"/>
+      </div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true"><span>Scroll</span><div class="scroll-line"></div></div>
+  </div>
+</section>
+
+<div id="identity-wrap" style="padding:3.9rem 2rem 0;max-width:1140px;margin:0 auto">
+  <div class="identity-box reveal">
+    <div class="sec-label">Professional Summary</div>
+    <p class="identity-text">
+      Engineering-focused experimental physicist delivering <strong>Pound-Drever-Hall (PDH) locking</strong>, UHV system commissioning, <strong>noise diagnostics</strong>, Python-based analysis, calibration workflows, and <strong>precision measurement</strong> in collaborative R&amp;D environments.
+      Contributor to the <strong>QUEST experiment</strong>, reported by Cardiff University as the <strong>world’s most sensitive tabletop interferometer</strong> for very-high-frequency gravitational-wave searches
+      <span class="cite-source">(Cardiff University, 2025)</span>.
+      <a href="https://www.cardiff.ac.uk/news/view/2954067-worlds-most-sensitive-table-top-experiment-sets-new-limits-on-very-high-frequency-gravitational-waves" target="_blank" rel="noopener">Source</a>
+    </p>
+  </div>
+</div>
+
+<section id="experience" class="section-alt">
+  <div class="section-alt-inner">
+    <div class="reveal"><div class="sec-label">01 · Experience</div><h2 class="sec-title">Engineering &amp; Research Experience</h2></div>
+
+    <div class="exp-grid">
+      <article class="exp-card reveal">
+        <div class="exp-tag">Cardiff University · 2025–Present</div>
+        <h3 class="exp-title">Laser Frequency Stabilization &amp; High-power Interferometer Commissioning</h3>
+
+        <div class="exp-field-label">Team Scope</div>
+        <p class="exp-body">Collaborative QUEST programme team (~5–6 researchers: 2 professors, 2 postdoctoral researchers, and 2 PhD researchers). Individual contributions focused on optical commissioning, lock optimisation, and transfer-function-driven diagnostics.</p>
+
+        <div class="exp-field-label">System</div>
+        <p class="exp-body">Co-located power-recycled Michelson interferometers (using 1064 nm Nd:YAG lasers and neoLASE GmbH OEM solid-state laser amplifier systems, and active control loops) for high-sensitivity precision measurement experiments.</p>
+
+        <div class="exp-field-label">Issue</div>
+        <p class="exp-body">Mechanical coupling and loop instabilities limited lock robustness and noise performance. A second major focus was increasing laser power build-up in the arm cavity to improve SNR and reduce relative shot-noise impact.</p>
+
+        <div class="exp-field-label">Action</div>
+        <ul class="exp-bullets">
+          <li>Implemented <strong>PDH locking</strong> using both <strong>dither-lock and DC-readout</strong> locking methods</li>
+          <li>Measured and tuned loop behaviour using <strong>DARM transfer-function measurement</strong></li>
+          <li>Optimised alignment to improve power build-up and operational repeatability</li>
+        </ul>
+
+        <div class="exp-field-label">Technical Intervention — Noise Mitigation Through Passive Vibration Isolation</div>
+        <ul class="exp-bullets">
+          <li><strong>Led passive vibration isolation</strong> implementation using Viton damping pads; postdoctoral support from Dr Fabio Bergamin during selected runs</li>
+          <li>Diagnosed mechanical coupling pathways using DARM transfer-function measurement</li>
+          <li>Achieved <strong>~10× RMS noise reduction</strong> following installation</li>
+          <li>Improved lock robustness and operational stability during sustained runs</li>
+        </ul>
+
+        <div class="exp-outcome-row">
+          <div class="exp-outcome-val">Achieved <strong>~370× laser power build-up gain</strong> through alignment and lock optimisation; stable operation demonstrated in the measurement band.</div>
+        </div>
+      </article>
+
+      <article class="exp-card reveal">
+        <div class="exp-tag">Cardiff University · Ongoing</div>
+        <h3 class="exp-title">Optical Calibration System for Gravitational-Wave Detectors</h3>
+
+        <div class="exp-field-label">Role</div>
+        <p class="exp-body">Independently developing this calibration system under the supervision of Prof Hartmut Grote.</p>
+
+        <div class="exp-field-label">System</div>
+        <p class="exp-body">Independent optical calibration via scattered-light injection, designed as a non-mechanical calibration cross-check for LIGO-like interferometers.</p>
+
+        <div class="exp-field-label">Issue</div>
+        <p class="exp-body">Force-based calibration methods (e.g., photon and Newtonian calibration) can be limited by modelling uncertainties in test-mass eigenmodes, mass distribution, and deformation effects.</p>
+
+        <div class="exp-field-label">Action</div>
+        <ul class="exp-bullets">
+          <li>Designed <strong>independent optical calibration</strong> via scattered-light injection without mechanical test-mass actuation</li>
+          <li>Engineered <strong>CAD motor mount and cog-wheel scattering surfaces</strong> in <strong>OpenSCAD</strong>; fabricated components via <strong>PLA+ 3D printing</strong></li>
+          <li>Programmed <strong>Arduino Uno</strong> via Arduino IDE to drive a <strong>brushless servo motor</strong> rotating the scattering cog-wheel and injecting <strong>phase-modulated scattered light</strong> back into the interferometer</li>
+          <li>Built <strong>Python workflows</strong> for response extraction in the detectable <strong>MHz regime</strong></li>
+        </ul>
+
+        <div class="exp-field-label">Planned Extension</div>
+        <p class="exp-body">Planned integration of an external laser for frequency sweep/scan measurements to obtain interferometer response spectra for calibration; long-term deployment target includes kilometre-scale gravitational-wave facilities.</p>
+
+        <div class="exp-outcome-row">
+          <div class="exp-outcome-val">Preliminary theoretical studies indicate detectable phase modulation in-band; hardware integration and initial test runs are in progress.</div>
+        </div>
+      </article>
+
+      <article class="exp-card reveal">
+        <div class="exp-tag">Caltech LIGO Laboratory · Summer 2023</div>
+        <h3 class="exp-title">Birefringence Fluctuation Measurements in Crystalline Silicon</h3>
+
+        <div class="exp-field-label">Role</div>
+        <p class="exp-body">Independent project under Prof Rana Adhikari and Prof Yuta Michimura; currently being restarted independently at Cardiff with Dr Keiko Kokeyama using hardware upgrades and improved analysis infrastructure.</p>
+
+        <div class="exp-field-label">System</div>
+        <p class="exp-body">High-sensitivity polarimetry measurement setup for crystalline silicon optical samples.</p>
+
+        <div class="exp-field-label">Issue</div>
+        <p class="exp-body">Unquantified birefringence fluctuations represented a material-level uncertainty for next-generation detector design.</p>
+
+        <div class="exp-field-label">Action</div>
+        <ul class="exp-bullets">
+          <li>Designed and executed <strong>high-sensitivity polarimetry</strong> experiment</li>
+          <li>Built <strong>noise budget analysis</strong> and sensitivity workflows</li>
+          <li>Validated <strong>shot-noise-limited behaviour</strong> in measurement band</li>
+        </ul>
+
+        <div class="exp-outcome-row">
+          <div class="exp-outcome-val">Produced first upper-limit measurements relevant to next-generation detector material studies.</div>
+        </div>
+      </article>
+    </div>
+
+    <div class="reveal" style="margin-top:2rem">
+      <div class="sec-label">Impact</div>
+      <h3 class="impact-title">Measured Outcomes</h3>
+      <div class="impact-grid">
+        <div class="impact-card"><div class="impact-icon">◈</div><div class="impact-metric">~370×</div><div class="impact-label">System Power-recycling Gain</div><div class="impact-sub">Commissioning and alignment optimisation result</div></div>
+        <div class="impact-card"><div class="impact-icon">◇</div><div class="impact-metric">~10×</div><div class="impact-label">RMS Noise Reduction</div><div class="impact-sub">After passive isolation, DARM-validated</div></div>
+        <div class="impact-card"><div class="impact-icon">△</div><div class="impact-metric">10⁻⁷ mbar</div><div class="impact-label">Vacuum Regime</div><div class="impact-sub">Sustained UHV operation in precision runs</div></div>
+        <div class="impact-card"><div class="impact-icon">◎</div><div class="impact-metric">10⁻²¹ m/√Hz</div><div class="impact-label">Sensitivity</div><div class="impact-sub">Demonstrated in 1–200 MHz operating band</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills" class="section">
+  <div class="reveal"><div class="sec-label">02 · Skills</div><h2 class="sec-title">Technical Capabilities</h2></div>
+  <div class="skills-grid">
+    <div class="skills-block reveal">
+      <div class="skills-block-title">Hardware &amp; Optics</div>
+      <ul class="skills-list">
+        <li>Laser frequency stabilization (PDH, Fabry-Pérot)</li>
+        <li>Cavity locking</li>
+        <li>Power-recycled Michelson interferometers</li>
+        <li>High-precision optical alignment</li>
+        <li>Vibration isolation systems</li>
+        <li>Ultra-high vacuum (UHV) operation</li>
+        <li>Noise budget analysis</li>
+        <li>Digital filter design</li>
+        <li>System integration &amp; commissioning</li>
+        <li>Cleanroom protocols</li>
+      </ul>
+    </div>
+
+    <div class="skills-block reveal">
+      <div class="skills-block-title">Instrumentation &amp; Control</div>
+      <ul class="skills-list">
+        <li>Moku:Pro (signal analyzer, PID, lock-in, etc.)</li>
+        <li>Electro-optics</li>
+        <li>Precision instrumentation</li>
+        <li>PZT &amp; picomotor actuators</li>
+        <li>High-bandwidth photodetectors</li>
+        <li>GigE cameras</li>
+        <li>Control &amp; data acquisition systems</li>
+        <li>Feedback control system tuning</li>
+        <li>Open-loop transfer function measurement</li>
+        <li>Embedded control (Arduino / microcontrollers)</li>
+      </ul>
+    </div>
+
+    <div class="skills-block reveal">
+      <div class="skills-block-title">Software &amp; Analysis</div>
+      <ul class="skills-list">
+        <li>Python (NumPy, SciPy, Matplotlib)</li>
+        <li>Spectral analysis (ASD/PSD)</li>
+        <li>Digital signal processing</li>
+        <li>CAD (OpenSCAD)</li>
+        <li>Git</li>
+        <li>Linux systems</li>
+        <li>Data visualization</li>
+        <li>Simulation &amp; modeling</li>
+        <li>Transfer-function measurement</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="education" class="section-alt">
+  <div class="section-alt-inner">
+    <div class="reveal"><div class="sec-label">03 · Education</div><h2 class="sec-title">Education</h2></div>
+
+    <div class="edu-card featured reveal">
+      <div class="edu-row">
+        <div>
+          <div class="edu-degree">PhD in Physics — Experimental Gravitational-Wave Detection</div>
+          <div class="edu-inst">Cardiff University, UK · Gravity Exploration Institute</div>
+          <div class="edu-detail">UKRI-STFC funded</div>
+        </div>
+        <div class="edu-period">Jan 2025 – Present</div>
+      </div>
+      <div class="edu-focus">
+        <span class="edu-tag">Laser Interferometry</span><span class="edu-tag">Control Systems</span><span class="edu-tag">Precision Measurement</span>
+        <span class="edu-tag">Noise Diagnostics</span><span class="edu-tag">System Commissioning</span><span class="edu-tag">UHV</span>
+      </div>
+      <div class="edu-supervisors">Supervisors: Prof H. Grote · Prof K. Dooley · Dr K. Kokeyama</div>
+    </div>
+
+    <div class="edu-card reveal">
+      <div class="edu-row">
+        <div>
+          <div class="edu-degree">Post-Graduate Diploma in Physics &amp; Astronomy</div>
+          <div class="edu-inst">Ashoka University, India</div>
+          <div class="edu-detail">CGPA 3.62 / 4.0 · Cum Laude</div>
+        </div>
+        <div class="edu-period">2023 – 2024</div>
+      </div>
+    </div>
+
+    <div class="edu-card reveal">
+      <div class="edu-row">
+        <div>
+          <div class="edu-degree">BSc Physics (Honours)</div>
+          <div class="edu-inst">Ashoka University, India</div>
+          <div class="edu-detail">CGPA 3.36 / 4.0 · Upper Second Class Equivalent</div>
+        </div>
+        <div class="edu-period">2020 – 2023</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="recognition" class="section">
+  <div class="reveal"><div class="sec-label">04 · Awards</div><h2 class="sec-title">Funding &amp; Fellowships</h2></div>
+  <div class="row-list">
+    <article class="recognition-row reveal">
+      <div class="row-badge color-cyan">Funding</div>
+      <div class="row-top">
+        <div class="row-title">STFC PhD Studentship</div>
+        <div class="row-date">2025–2029</div>
+      </div>
+      <div class="row-meta">Science &amp; Technology Facilities Council (UKRI)</div>
+    </article>
+
+    <article class="recognition-row reveal">
+      <div class="row-badge color-green">Grant</div>
+      <div class="row-top">
+        <div class="row-title">STFC Long-Term Attachment</div>
+        <div class="row-date">2026–2027</div>
+      </div>
+      <div class="row-meta">UKRI-STFC funded 3–4 month attachment support</div>
+    </article>
+
+    <article class="recognition-row reveal">
+      <div class="row-badge color-cyan">Placement</div>
+      <div class="row-top">
+        <div class="row-title">Visiting Researcher Program — LIGO Livingston Observatory</div>
+        <div class="row-date">Jul – Sep 2026</div>
+      </div>
+      <div class="row-meta">Caltech/LIGO Observatory funded placement</div>
+    </article>
+
+    <article class="recognition-row reveal">
+      <div class="row-badge color-purple">Fellowship</div>
+      <div class="row-top">
+        <div class="row-title">NSF Caltech LIGO Summer Research Fellowship</div>
+        <div class="row-date">2023</div>
+      </div>
+      <div class="row-meta">Competitive NSF-funded programme at Caltech LIGO Laboratory</div>
+    </article>
+
+    <article class="recognition-row reveal">
+      <div class="row-badge color-orange">Academic</div>
+      <div class="row-top">
+        <div class="row-title">Cum Laude</div>
+        <div class="row-date">2024</div>
+      </div>
+      <div class="row-meta">Post-Graduate Diploma in Physics &amp; Astronomy, Ashoka University</div>
+    </article>
+  </div>
+</section>
+
+<section id="presentations" class="section-alt">
+  <div class="section-alt-inner">
+    <div class="reveal"><div class="sec-label">05 · Presentations</div><h2 class="sec-title">Selected Presentations</h2></div>
+    <div class="row-list">
+      <article class="presentation-row reveal">
+        <div class="row-badge color-cyan">Contributed Talk</div>
+        <div class="row-top">
+          <div class="row-title">Optical Calibration of Gravitational-Wave Detectors using Backscattered Light</div>
+          <div class="row-date">Sep 2024</div>
+        </div>
+        <div class="row-meta">UK Gravitational-Wave Community Conference · University of Nottingham</div>
+      </article>
+
+      <article class="presentation-row reveal">
+        <div class="row-badge color-green">Presentation</div>
+        <div class="row-top">
+          <div class="row-title">Optical Calibration Systems</div>
+          <div class="row-date">Jan 2026</div>
+        </div>
+        <div class="row-meta">Nordic Winter School on Black Holes &amp; Gravitational Waves · Norway</div>
+      </article>
+
+      <article class="presentation-row reveal">
+        <div class="row-badge color-purple">Research Presentation</div>
+        <div class="row-top">
+          <div class="row-title">Measuring Birefringence and Its Fluctuations in Crystalline Silicon</div>
+          <div class="row-date">Jul 2023</div>
+        </div>
+        <div class="row-meta">Caltech LIGO Laboratory · Pasadena</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="section">
+  <div class="reveal"><div class="sec-label">06 · Contact</div><h2 class="sec-title">Contact</h2></div>
+  <div class="contact-cv-row reveal">
+    <p class="contact-cv-text"><strong>Download CV</strong> — full project and technical detail</p>
+    <a class="btn-primary" href="Kushal_Jain_CV.pdf" target="_blank" rel="noopener" download>Download CV</a>
+  </div>
+  <div class="contact-grid">
+    <a class="contact-card reveal" href="mailto:jaink5@cardiff.ac.uk"><div class="contact-icon">✉</div><div class="contact-label">Email</div><div class="contact-val">jaink5@cardiff.ac.uk</div></a>
+    <a class="contact-card reveal" href="https://www.linkedin.com/in/jain-kushal/" target="_blank" rel="noopener"><div class="contact-icon">in</div><div class="contact-label">LinkedIn</div><div class="contact-val">linkedin.com/in/jain-kushal</div></a>
+    <a class="contact-card reveal" href="https://github.com/kushal-jain" target="_blank" rel="noopener">
+      <div class="contact-icon">⌥</div>
+      <div class="contact-label">GitHub</div>
+      <div class="contact-val">github.com/kushal-jain</div>
+      <div class="contact-sub">Noise analysis scripts · ASD/PSD workflows · calibration tooling</div>
+    </a>
+    <a class="contact-card reveal" href="https://www.cardiff.ac.uk/physics-astronomy/research/research-groups/gravity-exploration-institute" target="_blank" rel="noopener"><div class="contact-icon">◈</div><div class="contact-label">Institution</div><div class="contact-val">Gravity Exploration Institute · Cardiff University</div></a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-name">Kushal Jain</div>
+      <div class="footer-location">Cardiff, United Kingdom</div>
+    </div>
+    <div class="footer-links">
+      <a class="footer-link" href="mailto:jaink5@cardiff.ac.uk">Email</a>
+      <a class="footer-link" href="https://www.linkedin.com/in/jain-kushal/" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="footer-link" href="https://github.com/kushal-jain" target="_blank" rel="noopener">GitHub</a>
+      <a class="footer-link institution-link" href="https://www.cardiff.ac.uk/physics-astronomy/research/research-groups/gravity-exploration-institute" target="_blank" rel="noopener">Institution</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 Kushal Jain</span>
+  </div>
+</footer>
+
+<script>
+const mainNav=document.getElementById('main-nav')
+window.addEventListener('scroll',()=>{mainNav.classList.toggle('scrolled',window.scrollY>60)},{passive:true})
+
+const burgerBtn=document.getElementById('burger')
+const mobileMenu=document.getElementById('mobile-menu')
+burgerBtn.addEventListener('click',()=>{
+  const open=mobileMenu.classList.toggle('open')
+  burgerBtn.setAttribute('aria-expanded',String(open))
+  mobileMenu.setAttribute('aria-hidden',String(!open))
+})
+function closeMobile(){
+  mobileMenu.classList.remove('open')
+  burgerBtn.setAttribute('aria-expanded','false')
+  mobileMenu.setAttribute('aria-hidden','true')
+}
+
+const revealEls=document.querySelectorAll('.reveal')
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}
+  })
+},{threshold:.07,rootMargin:'0px 0px -24px 0px'})
+revealEls.forEach(el=>obs.observe(el))
+
+(function(){
+  const canvas=document.getElementById('hero-canvas')
+  if(!canvas)return
+  const ctx=canvas.getContext('2d')
+  let t=0,lastTime=0
+  const TARGET_FPS=30,FRAME_MS=1000/TARGET_FPS
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize,{passive:true})
+  function draw(now){
+    requestAnimationFrame(draw)
+    if(now-lastTime<FRAME_MS)return
+    lastTime=now
+    const W=canvas.width,H=canvas.height
+    ctx.clearRect(0,0,W,H)
+    ctx.fillStyle='#050810';ctx.fillRect(0,0,W,H)
+    ctx.strokeStyle='rgba(0,200,255,0.028)';ctx.lineWidth=1
+    const step=65
+    for(let x=0;x<W;x+=step){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
+    for(let y=0;y<H;y+=step){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+    const cx=W*.5,cy=H*.47,la=.46+.15*Math.sin(t*.028)
+    const hg=ctx.createLinearGradient(0,cy,W,cy)
+    hg.addColorStop(0,'rgba(0,200,255,0)')
+    hg.addColorStop(.25,`rgba(0,200,255,${la})`)
+    hg.addColorStop(.75,`rgba(0,200,255,${la})`)
+    hg.addColorStop(1,'rgba(0,200,255,0)')
+    ctx.strokeStyle=hg;ctx.lineWidth=2;ctx.shadowColor='#00c8ff';ctx.shadowBlur=12
+    ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke()
+    const vg=ctx.createLinearGradient(cx,0,cx,H)
+    vg.addColorStop(0,'rgba(0,200,255,0)')
+    vg.addColorStop(.2,`rgba(0,200,255,${la*.6})`)
+    vg.addColorStop(.8,`rgba(0,200,255,${la*.6})`)
+    vg.addColorStop(1,'rgba(0,200,255,0)')
+    ctx.strokeStyle=vg;ctx.lineWidth=1.6
+    ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke()
+    ctx.shadowBlur=0
+    const r=ctx.createRadialGradient(cx,cy*.93,0,cx,cy*.93,W*.56)
+    r.addColorStop(0,'rgba(5,8,16,0.80)')
+    r.addColorStop(.5,'rgba(5,8,16,0.58)')
+    r.addColorStop(1,'rgba(5,8,16,0.16)')
+    ctx.fillStyle=r;ctx.fillRect(0,0,W,H)
+    t++
+  }
+  requestAnimationFrame(draw)
+})()
+</script>
+</body>
+</html>
